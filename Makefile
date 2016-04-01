@@ -12,4 +12,4 @@ run:
 	./exe
 
 clean:
-	rm *.o exe
+	rm -rf *.o exe
