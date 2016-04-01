@@ -1,10 +1,12 @@
 all: exe
 
+SYSTEMC_HOME=/home/doctor/d101061819/Chicago/checkout_0701_repo/tools/Arteris/FlexNoC-2.11.4/externals
+
 exe: main.o
-	g++ -L/usr/cadtool/systemc-2.3/lib-linux64 main.o -lsystemc -o exe
+	g++ -m32 -L${SYSTEMC_HOME}/lib-linux main.o -lsystemc -o exe
 
 main.o: main.cpp 
-	g++ -g -c -I/usr/cadtool/systemc-2.3/include main.cpp
+	g++ -m32 -g -c -I${SYSTEMC_HOME}/include main.cpp
 
 run:
 	./exe
