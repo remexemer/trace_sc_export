@@ -54,11 +54,13 @@ public:
   {
     sc_close_vcd_trace_file( tf ); 
   }
+    
+  // NOTE: sc_trace must be after the port binding (exp( sig )); otherwise, the exp.get_interface() return NULL!
+  // Thus, binding in constructor and tracing in end_of_elaboration() may be a good idea. 
   void end_of_elaboration()
   {
-    //NOTE: sc_trace must be after the port binding (exp( sig )); otherwise, the exp.get_interface() return NULL!
     //sc_trace( tf, (DCAST<const sc_signal_in_if<int>*>( a->exp.get_interface() ))->read(), "exp" ); 
-    sc_trace( tf, a->exp, "a_exp" ); 
+    sc_trace( tf, a->exp, "a_exp" ); // this is the only one line which VPIP owner need to add in the top module. 
   }
 private:
   sc_trace_file * tf;
