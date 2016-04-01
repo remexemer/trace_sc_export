@@ -18,12 +18,9 @@ public:
     exp( sig ); 
 
     SC_THREAD( run ); 
-    
   }
 
-  ~A()
-  {
-  }
+  ~A() {}
 
   void run()
   {
