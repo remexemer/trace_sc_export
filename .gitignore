@@ -1,0 +1,7 @@
+exe
+*.o
+*.rc
+*.vcd
+*.fsdb
+nWaveLog/
+vfastLog/
