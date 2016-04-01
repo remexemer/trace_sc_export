@@ -2,7 +2,7 @@
 Demo how to trace sc_export. 
 
 ## Compile
-make SYSTEMC_HOME=<where systemc is installed>
+make SYSTEMC_HOME=&lt;where systemc is installed&gt;
 
 ## Run
 ./exe
