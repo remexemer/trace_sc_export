@@ -1,5 +1,13 @@
 #include <systemc>
 using namespace sc_core; 
+    
+//Assume that the type of PPA is sc_export<sc_signal_inout_if<int> >!
+void sc_trace( sc_trace_file* tf, const sc_export<sc_signal_inout_if<int> > & exp, const std::string& name )
+{
+  if( tf ) {
+    sc_trace( tf, (DCAST<const sc_signal_in_if<int>*>( exp.get_interface() ))->read(), name ); 
+  }
+}
 
 class A: public sc_module
 {
@@ -9,17 +17,12 @@ public:
   {
     exp( sig ); 
 
-    tf = sc_create_vcd_trace_file( "tf" ); 
-    //NOTE: sc_trace must be after the port binding (exp( sig )); otherwise, the exp.get_interface() return NULL!
-    sc_trace( tf, (DCAST<const sc_signal_in_if<int>*>( exp.get_interface() ))->read(), "exp" ); 
-    
     SC_THREAD( run ); 
     
   }
 
   ~A()
   {
-    sc_close_vcd_trace_file( tf ); 
   }
 
   void run()
@@ -35,12 +38,36 @@ public:
   sc_export<sc_signal_inout_if<int> > exp; 
 private:
   sc_signal<int> sig; 
-  sc_trace_file * tf;
 };
+
+class Top: public sc_module
+{
+public:
+	SC_HAS_PROCESS( Top );
+	Top( sc_module_name n ): sc_module( n )
+  {
+    tf = sc_create_vcd_trace_file( "tf" ); 
+    
+    a = new A( "dut" ); 
+  }
+  ~Top()
+  {
+    sc_close_vcd_trace_file( tf ); 
+  }
+  void end_of_elaboration()
+  {
+    //NOTE: sc_trace must be after the port binding (exp( sig )); otherwise, the exp.get_interface() return NULL!
+    //sc_trace( tf, (DCAST<const sc_signal_in_if<int>*>( a->exp.get_interface() ))->read(), "exp" ); 
+    sc_trace( tf, a->exp, "a_exp" ); 
+  }
+private:
+  sc_trace_file * tf;
+  A* a; 
+}; 
 
 int sc_main(int argc, char* argv[])
 {
-  A a("a"); 
+  Top top("top"); 
 
   sc_start(); 
 
