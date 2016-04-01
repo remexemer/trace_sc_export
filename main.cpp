@@ -10,6 +10,7 @@ public:
     exp( sig ); 
 
     tf = sc_create_vcd_trace_file( "tf" ); 
+    //NOTE: sc_trace must be after the port binding (exp( sig )); otherwise, the exp.get_interface() return NULL!
     sc_trace( tf, (DCAST<const sc_signal_in_if<int>*>( exp.get_interface() ))->read(), "exp" ); 
     
     SC_THREAD( run ); 
